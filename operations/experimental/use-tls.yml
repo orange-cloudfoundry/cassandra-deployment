@@ -12,7 +12,7 @@
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/cert
   type: replace
-  value: ((cassandra_seeds_certificate))
+  value: ((cassandra_nodes_certificate))
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=cassandra/properties?/keystore_password
   type: replace
@@ -30,7 +30,7 @@
 
 - path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/cert
   type: replace
-  value: ((cassandra_servers_certificate))
+  value: ((cassandra_nodes_certificate))
 
 - path: /instance_groups/name=cassandra-servers/jobs/name=cassandra/properties?/keystore_password
   type: replace
@@ -53,26 +53,14 @@
       is_ca: true
       common_name: cassandraCA
 
-- path: /variables?/name=cassandra_seeds_certificate
+- path: /variables?/name=cassandra_nodes_certificate
   type: replace
   value:
-    name: cassandra_seeds_certificate
+    name: cassandra_nodes_certificate
     type: certificate
     options:
       ca: cassandraCA
-      common_name: <%= seed.instance.address %>
-      alternative_names: 
-        - "*.cassandra-seeds.default.cassandra.bosh"
-      extended_key_usage: [ client_auth, server_auth ]
-
-- path: /variables?/name=cassandra_servers_certificate
-  type: replace
-  value:
-    name: cassandra_servers_certificate
-    type: certificate
-    options:
-      ca: cassandraCA
-      common_name: <%= cluster.instance.address %>
+      common_name: "*.cassandra-seeds.default.cassandra.bosh"
       alternative_names: 
         - "*.cassandra-servers.default.cassandra.bosh"
       extended_key_usage: [ client_auth, server_auth ]
