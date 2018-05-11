@@ -26,6 +26,20 @@ seeds only, you get one replication of it on all nodes.
 
 # Operations files
 
+## `use-bpm.yml`
+
+This is a recommended way to strengthen the security of you Cassandra nodes in
+production, implementing namespaces and cgroups to sandbox the execution of
+Cassandra daemons. Using BPM (BOSH Process Manager) is meant to become the
+default in future versions of this BOSH release.
+
+
+## `rename-deployment-and-network.yml`
+
+This helps in the classical operation that consists in renaming the deployment
+and the network that instances are attached to.
+
+
 ## `cf-service-broker.yml`
 
 This operations file add a `cassandra-brokers` instance group, a
@@ -81,6 +95,13 @@ values for this Bosh Link manually. See the [Manual Linking](https://bosh.io/doc
 section of the Bosh documentation for details about how to do this.
 
 
+## `cf-service-broker-rename-deployment-and-network.yml`
+
+This add-on to `cf-service-broker.yml` implements a deployment and network
+renaming. To be used when using `rename-deployment-and-network.yml` and
+`cf-service-broker.yml`.
+
+
 ## `shield-v7-agent.yml`
 
 This operations file installs a SHIELD v7 agent for backuping you Cassandra
@@ -121,6 +142,8 @@ first, or use an absolute-path syntax that will target it in CredHub:
 ```
 
 
+# Development operations files
+
 ## `admin-tool.yml`
 
 This operations file adds a job that provides convenient wrappers around usual
@@ -130,6 +153,35 @@ cluster to properly work. They are even not recommended in production, as they
 can provide a larger attack surface to intruders.
 
 
+## `latest-versions.yml`
+
+This helps release authors to deploy their latest development release that is
+uploaded to the BOSH director.
+
+
 ## `bosh-lite.yml`
 
 This operations file implements the necessary settings for deploying in Bosh-Lite.
+
+
+## `custom-release-name.yml`
+
+This helps release authors to deploy Cassandra releases with custom names, as
+produced by the `bosh create-release --name` command. This is especially
+useful when release authors are developing new features for the BOSH release
+at the same time using a single shared BOSH director.
+
+
+# Experimental operations files
+
+## `experimental/use-tls.yml`
+
+Cassandra doesn't support specifying many keys to trust for mutual TLS. In
+order to rotate certificates, you need to disable TLS, re-deploy, then
+re-enable TLS with the new certificates.
+
+
+## `experimental/use-tls-rename-deployment-and-network.yml`
+
+This add-on to `use-tls.yml` implements a deployment and network renaming. To
+be used when using both `rename-deployment-and-network.yml` and `use-tls.yml`.
