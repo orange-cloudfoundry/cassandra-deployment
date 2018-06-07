@@ -180,8 +180,26 @@ Cassandra doesn't support specifying many keys to trust for mutual TLS. In
 order to rotate certificates, you need to disable TLS, re-deploy, then
 re-enable TLS with the new certificates.
 
+This requires the `rename-deployment-and-network.yml` ops file, and one of
+`use-tls-cert-green.yml` or `use-tls-cert-blue.yml`
 
-## `experimental/use-tls-rename-deployment-and-network.yml`
 
-This add-on to `use-tls.yml` implements a deployment and network renaming. To
-be used when using both `rename-deployment-and-network.yml` and `use-tls.yml`.
+## `experimental/use-tls-cert-green.yml`
+
+This uses the “green” certificate to encrypt and authenticate mTLS between
+Cassandra nodes. Transitioning from green to blue certificates is only
+required when rotating certificates.
+
+
+## `experimental/use-tls-cert-blue.yml`
+
+This uses the “blue” certificate to encrypt and authenticate mTLS between
+Cassandra nodes. Transitioning back from blue to green certificates is only
+required when rotating certificates.
+
+
+## `experimental/rotate-certs-transitional-step.yml`
+
+This ops file should be used as an intermediate step when transitioning from
+green to blue certificates, of back from blue to green. This is only required
+temporarily during the process of rotating certificates.
