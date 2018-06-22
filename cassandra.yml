@@ -74,7 +74,9 @@ update:
 
 releases:
   - name: &cassandra_release cassandra
-    version: latest
+    version: "8"
+    url: https://github.com/orange-cloudfoundry/cassandra-boshrelease/releases/download/v8/cassandra-8.tgz
+    sha1: e8b8221f89a09f66e015d9e2356fa2d4a23d1aa9
 
 stemcells:
   - alias: &trusty_stemcell trusty
