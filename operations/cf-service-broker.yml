@@ -80,7 +80,11 @@
             # Note: the cassandra broker doesn't provide this link yet, so we revert
             # back to manual linking
             instances:
-              - 0.cassandra-brokers.((network_name)).((deployment_name)).bosh # Provided by a Bosh DNS alias
+              # This is dummy BOSH DNS alias. In fact we don't need it to
+              # resolve to any IP address since only the 'external_host' is
+              # actually used by the 'broker-registrar' job, and not this
+              # instance address.
+              - 0.cassandra-brokers.((network_name)).((deployment_name)).bosh
             properties:
               external_host: ((cassandra_domain))
               port: 8080
