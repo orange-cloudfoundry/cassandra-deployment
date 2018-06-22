@@ -22,7 +22,7 @@
 - path: /instance_groups/-
   type: replace
   value:
-    name: cassandra-smoke-tests
+    name: smoke-tests-vm
     instances: 1
     lifecycle: errand
     azs: [ z1 ]
