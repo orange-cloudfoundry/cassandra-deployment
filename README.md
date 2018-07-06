@@ -24,6 +24,34 @@ replicated as many times as there are cassandra seeds. So when you deploy
 seeds only, you get one replication of it on all nodes.
 
 
+# Deployment topologies
+
+You should span your Cassandra nodes accross different hypervisors and
+different availability zones, in order to minimize risk of data loss in case
+of failure.
+
+The default deployment uses the standardrd 3 zones named `z1`, `z2` and `z3`.
+You should refer to the documentation of your CPI in order to properly setup
+these availability zones in your Cloud Config. See [Defining
+AZs][defining_azs] and [CPI Specific `cloud_properties`][cpi_Specific_cloud_properties]
+for more information.
+
+[defining_azs]: https://bosh.io/docs/azs/#config
+[cpi_Specific_cloud_properties]: https://bosh.io/docs/azs/#azs-cloud-properties
+
+
+Randomizing AZ placement with the [`randomize_az_placement`][features_block]
+property should be considered, and you can use the `randomize-az-placement.yml`
+ops file for this. For complex topologies with different availability zones
+and different data centers, the
+[`bosh_to_cassandra_topology_mapping`][bosh_to_cassandra_topology_mapping]
+property should help you mapping those to Cassandra “Racks” and “DCs”. Refer
+to the comprehensive documentation of the [`cassandra` job spec][bosh_to_cassandra_topology_mapping].
+
+[features_block]: https://bosh.io/docs/manifest-v2/#features
+[bosh_to_cassandra_topology_mapping]: https://github.com/orange-cloudfoundry/cassandra-boshrelease/blob/master/jobs/cassandra/spec#L577-L609
+
+
 # Operations files
 
 ## `cf-service-broker.yml`
