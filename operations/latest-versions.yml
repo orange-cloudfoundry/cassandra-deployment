@@ -1,5 +1,11 @@
 ---
 
+- path: /releases/name=cassandra?
+  type: replace
+  value:
+    name: cassandra
+    version: latest
+
 - path: /releases/name=bpm?
   type: replace
   value:
