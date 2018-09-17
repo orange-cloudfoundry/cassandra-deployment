@@ -1,0 +1,19 @@
+---
+
+- path: /instance_groups/name=cassandra-seeds/vm_type
+  type: replace
+  value: ((cassandra_vm_type))
+
+- path: /instance_groups/name=cassandra-seeds/persistent_disk_type
+  type: replace
+  value: ((cassandra_persistent_disk_type))
+
+
+
+- path: /instance_groups/name=cassandra-servers/vm_type
+  type: replace
+  value: ((cassandra_vm_type))
+
+- path: /instance_groups/name=cassandra-servers/persistent_disk_type
+  type: replace
+  value: ((cassandra_persistent_disk_type))

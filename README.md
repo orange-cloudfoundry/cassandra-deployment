@@ -181,6 +181,12 @@ cluster to properly work. They are even not recommended in production, as they
 can provide a larger attack surface to intruders.
 
 
+## `scale-vms-and-disks.yml`
+
+This helps defining different VM type and persistent disk type for all VMs of
+the Cassandra cluster.
+
+
 ## `latest-versions.yml`
 
 This helps release authors to deploy their latest development release that is
