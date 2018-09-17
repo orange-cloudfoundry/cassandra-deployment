@@ -62,12 +62,6 @@ Cassandra daemons. Using BPM (BOSH Process Manager) is meant to become the
 default in future versions of this BOSH release.
 
 
-## `rename-deployment-and-network.yml`
-
-This helps in the classical operation that consists in renaming the deployment
-and the network that instances are attached to.
-
-
 ## `cf-service-broker.yml`
 
 This operations file add a `cassandra-brokers` instance group, a
@@ -121,13 +115,6 @@ providing a BOSH 2.0 Link that lets the Broker (De-)Registrar errand jobs know
 the exact Cloud Foundry settings. If you don't use it, then you can provide
 values for this Bosh Link manually. See the [Manual Linking](https://bosh.io/docs/links-manual/)
 section of the Bosh documentation for details about how to do this.
-
-
-## `cf-service-broker-rename-deployment-and-network.yml`
-
-This add-on to `cf-service-broker.yml` implements a deployment and network
-renaming. To be used when using `rename-deployment-and-network.yml` and
-`cf-service-broker.yml`.
 
 
 ## `shield-v7-agent.yml`
