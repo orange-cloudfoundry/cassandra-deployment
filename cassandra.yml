@@ -75,6 +75,8 @@ instance_groups:
 variables:
   - name: cassandra_admin_password
     type: password
+  - name: cassandra_keyspace
+    value: ops_m54app1s
 
 
 update:
