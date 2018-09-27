@@ -4,7 +4,7 @@
   type: replace
   value:
     name: shield
-    version: "7.0.4"
+    version: "7.0.5"
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=shield-agent?
   type: replace
@@ -28,17 +28,18 @@
       jobs:
         example-sys-ks_hourly2fs:
           name: (deployment)/(name)-(index)/system/hourly2fs
-          schedule: hourly
+          schedule: hourly-30
           target: (deployment)/(name)-(index)/system-keyspace
           store: test-fs-store
           retention: week
       stores:
-        name: test-fs-store
-        plugin: fs
-        config:
-          base_dir: /var/vcap/store/shield-backups
+        test-fs-store:
+          name: test-fs-store
+          plugin: fs
+          config:
+            base_dir: /var/vcap/store/shield-backups
       schedules:
-        hourly: hourly at 30
+        hourly-30: hourly at 30
       retention-policies:
         week: 7d
 
