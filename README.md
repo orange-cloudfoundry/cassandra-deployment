@@ -120,14 +120,16 @@ section of the Bosh documentation for details about how to do this.
 ## `shield-v7-agent.yml`
 
 This operations file installs a SHIELD v7 agent for backuping you Cassandra
-cluster, one keyspace at a time. As a requisite, please note that the
-`cassandra` SHIELD plugin was merged into v7 branch in the version `v7.0.4` of
-the SHIELD Bosh Release.
+cluster. By default, system keyspaces are excluded. Only user keyspaces are
+backuped. As a requisite, please note that the `cassandra` SHIELD plugin only
+exists as of version `v7.0.4` of the SHIELD Bosh Release. Version `v7.0.8` of
+the [gk-shield-boshrelease](https://github.com/gstackio/gk-shield-boshrelease)
+is highly recommended.
 
 With Cassandra, keyspaces usually have a replication factor that is strictly
-less than the number of nodes in the cluster. This implies that a given
-keyspace has to be backed up on *all* cluster nodes at the same time if you
-want to capture all its data.
+less than the number of nodes in the cluster. This implies that keyspaces have
+to be backuped on *all* cluster nodes at the same time if you want to capture
+all their data.
 
 As SHIELD has no “cluster” abstraction, operators are required to create
 separate one target and one job for each Cassandra node. To help in this
@@ -137,6 +139,11 @@ syntax with idioms like `(ip)` and `(deployment)`.
 The provisioned SHIELD jobs all use the same SHIELD schedule, so they are
 started nearly at the same time. You don't get strict ACID consistency with
 such a design but this is still a working backup solution.
+
+The `shield-v7-agent.yml` ops file demonstrates an example SHIELD store that
+uses the `fs` plugin. Because there is a bug with purging archives stored with
+this `fs` plugin the complementary `shield-v7-purge-archives.yml` ops file is
+provided as a workaround.
 
 
 ## `shield-v8-agent.yml`
@@ -157,6 +164,18 @@ first, or use an absolute-path syntax that will target it in CredHub:
 ```
 
 
+## `scale-vms-and-disks.yml`
+
+This helps defining different VM type and persistent disk type for all VMs of
+the Cassandra cluster.
+
+
+## `scale-memory.yml`
+
+This helps defining custom heap size for Cassandra JVM instances. Setting both
+`((max_heap_size))` and `((heap_newsize))` variables in necessary for this.
+
+
 # Development operations files
 
 ## `admin-tool.yml`
@@ -166,12 +185,6 @@ cassandra administrative tools. These are provided by this BOSH Release for
 human convenience only, so they are definitely not required for a Cassandra
 cluster to properly work. They are even not recommended in production, as they
 can provide a larger attack surface to intruders.
-
-
-## `scale-vms-and-disks.yml`
-
-This helps defining different VM type and persistent disk type for all VMs of
-the Cassandra cluster.
 
 
 ## `latest-versions.yml`
