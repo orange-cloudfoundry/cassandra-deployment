@@ -24,7 +24,6 @@
           config:
             cassandra_host: (ip)
             cassandra_password: ((cassandra_admin_password))
-            cassandra_bindir: /var/vcap/jobs/cassandra/bin
             cassandra_datadir: /var/vcap/store/cassandra/((deployment_name))/data
       jobs:
         example-usr-ks_hourly2fs:
