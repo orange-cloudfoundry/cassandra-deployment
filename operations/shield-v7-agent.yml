@@ -36,6 +36,13 @@
           retention: week
       stores:
         test-fs-store:
+          # WARNING: this 'fs' store below is a test-ONLY storage for SHIELD.
+          # Indeed, SHIELD v7 stores the backup archives locally on each node,
+          # but tries to purge the archives on the SHIELD server itself.
+          #
+          # This means that no purge can occur, whatever the retention is
+          # used. Thus you'll finally fill your Cassandra persistent storage.
+          # This is why you MUST NOT go to production with this.
           name: test-fs-store
           plugin: fs
           config:

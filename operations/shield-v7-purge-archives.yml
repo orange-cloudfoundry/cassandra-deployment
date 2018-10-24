@@ -1,0 +1,35 @@
+---
+
+# As a WORKAROUND to the issue raised in 'shield-v7-agent.yml' about purging
+# the 'fs' store archives, this ops-file enforces a 7 days retention, based on
+# a simple cron job.
+
+- path: /releases/name=os-conf?
+  type: replace
+  value:
+    name: "os-conf"
+    version: "20.0.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/os-conf-release?v=20.0.0"
+    sha1: "a60187f038d45e2886db9df82b72a9ab5fdcc49d"
+
+- path: /instance_groups/name=cassandra-seeds/jobs/name=pre-start-script?
+  type: replace
+  value: &shield_archive_purge_cron
+    name: pre-start-script
+    release: os-conf
+    properties:
+      script: |
+        #!/usr/bin/env bash
+
+        daily_cron_file=/etc/cron.daily/purge-shield-archives
+
+        cat > "${daily_cron_file}" <<EOF
+        #!/usr/bin/env bash
+        find /var/vcap/store/shield-backups -type f -mtime +7 -delete
+        EOF
+
+        chmod +x "${daily_cron_file}"
+
+- path: /instance_groups/name=cassandra-servers/jobs/name=pre-start-script?
+  type: replace
+  value: *shield_archive_purge_cron
