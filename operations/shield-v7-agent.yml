@@ -4,9 +4,9 @@
   type: replace
   value:
     name: shield
-    version: "7.0.7"
-    url: https://github.com/gstackio/gk-shield-boshrelease/releases/download/v7.0.7/shield-7.0.7.tgz
-    sha1: fe662b4e99257133c505afe157d423492c5b5d1e
+    version: "7.0.8"
+    url: https://github.com/gstackio/gk-shield-boshrelease/releases/download/v7.0.8/shield-7.0.8.tgz
+    sha1: 4c6556f502ac84a95b5d25459b1764e245241b60
 
 - path: /instance_groups/name=cassandra-seeds/jobs/name=shield-agent?
   type: replace
