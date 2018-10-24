@@ -18,20 +18,19 @@
     properties:
       autoprovision: true
       targets:
-        system-keyspace:
-          name: (deployment)/(name)-(index)/system-keyspace
+        user-keyspaces:
+          name: (deployment)/(name)-(index)/user-keyspaces
           plugin: cassandra
           config:
             cassandra_host: (ip)
             cassandra_password: ((cassandra_admin_password))
-            cassandra_keyspace: system
             cassandra_bindir: /var/vcap/jobs/cassandra/bin
             cassandra_datadir: /var/vcap/store/cassandra/((deployment_name))/data
       jobs:
-        example-sys-ks_hourly2fs:
-          name: (deployment)/(name)-(index)/system/hourly2fs
+        example-usr-ks_hourly2fs:
+          name: (deployment)/(name)-(index)/user-keyspaces/hourly2fs
           schedule: hourly-30
-          target: (deployment)/(name)-(index)/system-keyspace
+          target: (deployment)/(name)-(index)/user-keyspaces
           store: test-fs-store
           retention: week
       stores:
