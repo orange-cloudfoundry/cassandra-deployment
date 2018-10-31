@@ -24,7 +24,7 @@ instance_groups:
             z1:      { dc: DC1, rack: RAC1 }
             z2:      { dc: DC1, rack: RAC2 }
             z3:      { dc: DC1, rack: RAC3 }
-            default: { dc: DC1, rack: RAC1 }
+            default: { dc: DC1, rack: RAC3 }
     stemcell: *trusty_stemcell
     vm_type: &cassandra_vm_type default
     persistent_disk_type: &cassandra_persistent_disk_type default
@@ -34,7 +34,7 @@ instance_groups:
     networks: [ name: ((network_name)) ]
 
   - name: cassandra-servers
-    instances: 1
+    instances: 0
     azs: [ z1, z2, z3 ]
     jobs:
       - name: cassandra
@@ -100,4 +100,4 @@ releases:
 stemcells:
   - alias: &trusty_stemcell trusty
     os: ubuntu-trusty
-    version: "3586.46"
+    version: latest
