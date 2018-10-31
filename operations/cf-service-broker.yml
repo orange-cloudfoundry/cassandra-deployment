@@ -16,7 +16,7 @@
             user: cassandra-broker
             password: ((cassandra_broker_password))
             truststore_password: ((cassandra_key_store_pass))
-    stemcell: trusty
+    stemcell: &default_stemcell default
     vm_type: default
     networks: [ name: ((network_name)) ]
 
@@ -47,7 +47,7 @@
               servicename: cassandra
               serviceplan: default
               serviceinstancename: cassandra-instance
-    stemcell: trusty
+    stemcell: *default_stemcell
     vm_type: default
     networks: [ name: ((network_name)) ]
 
@@ -99,7 +99,7 @@
         properties: &broker_registrar_additional_properties
           cf:
             skip_ssl_validation: ((cf_skip_ssl_validation)) # not provided by the 'cf-admin-user' link
-    stemcell: trusty
+    stemcell: *default_stemcell
     vm_type: minimal
     networks: [ name: ((network_name)) ]
 
@@ -115,6 +115,6 @@
         release: broker-registrar
         consumes: *broker_registrar_consumed_links
         properties: *broker_registrar_additional_properties
-    stemcell: trusty
+    stemcell: *default_stemcell
     vm_type: minimal
     networks: [ name: ((network_name)) ]

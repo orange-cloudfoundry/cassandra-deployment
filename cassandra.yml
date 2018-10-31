@@ -8,7 +8,7 @@ releases:
     sha1: e8b8221f89a09f66e015d9e2356fa2d4a23d1aa9
 
 stemcells:
-  - alias: &trusty_stemcell trusty
+  - alias: &default_stemcell default
     os: ubuntu-trusty
     version: latest
 
@@ -36,7 +36,7 @@ instance_groups:
             z2:      { dc: DC1, rack: RAC2 }
             z3:      { dc: DC1, rack: RAC3 }
             default: { dc: DC1, rack: RAC3 }
-    stemcell: *trusty_stemcell
+    stemcell: *default_stemcell
     vm_type: &cassandra_vm_type default
     persistent_disk_type: &cassandra_persistent_disk_type default
     env:
@@ -56,7 +56,7 @@ instance_groups:
           seeds: { from: *cassandra_seeds_link }
           non_seeds: { from: *cassandra_non_seeds_link }
         properties: *cassandra_properties
-    stemcell: *trusty_stemcell
+    stemcell: *default_stemcell
     vm_type: *cassandra_vm_type
     persistent_disk_type: *cassandra_persistent_disk_type
     env:
@@ -76,7 +76,7 @@ instance_groups:
         release: *cassandra_release
         properties:
           cassandra_test_suites: [ crud ]
-    stemcell: *trusty_stemcell
+    stemcell: *default_stemcell
     vm_type: small
     env:
       persistent_disk_fs: xfs
