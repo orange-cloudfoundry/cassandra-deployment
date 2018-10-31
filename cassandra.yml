@@ -1,6 +1,17 @@
 ---
 name: ((deployment_name))
 
+releases:
+  - name: &cassandra_release cassandra
+    version: "8"
+    url: https://github.com/orange-cloudfoundry/cassandra-boshrelease/releases/download/v8/cassandra-8.tgz
+    sha1: e8b8221f89a09f66e015d9e2356fa2d4a23d1aa9
+
+stemcells:
+  - alias: &trusty_stemcell trusty
+    os: ubuntu-trusty
+    version: latest
+
 instance_groups:
   - name: cassandra-seeds
     instances: 3
@@ -12,7 +23,7 @@ instance_groups:
           cassandra: { as: &cassandra_seeds_link cassandra_seeds_list }
         consumes:
           seeds: { from: *cassandra_seeds_link }
-          non_seeds: { from: *cassandra_non_seeds_link }
+          non_seeds: { from: &cassandra_non_seeds_link cassandra_non_seeds_list }
         properties: &cassandra_properties
           cluster_name: ((deployment_name))
           cassandra_password: ((cassandra_admin_password))
@@ -40,7 +51,7 @@ instance_groups:
       - name: cassandra
         release: *cassandra_release
         provides:
-          cassandra: { as: &cassandra_non_seeds_link cassandra_non_seeds_list }
+          cassandra: { as: *cassandra_non_seeds_link }
         consumes:
           seeds: { from: *cassandra_seeds_link }
           non_seeds: { from: *cassandra_non_seeds_link }
@@ -89,15 +100,3 @@ update:
   # race condition in post-start when 2 repair-table are executed in parallel.
   max_in_flight: 1
   update_watch_time: 30000-240000
-
-
-releases:
-  - name: &cassandra_release cassandra
-    version: "8"
-    url: https://github.com/orange-cloudfoundry/cassandra-boshrelease/releases/download/v8/cassandra-8.tgz
-    sha1: e8b8221f89a09f66e015d9e2356fa2d4a23d1aa9
-
-stemcells:
-  - alias: &trusty_stemcell trusty
-    os: ubuntu-trusty
-    version: latest
