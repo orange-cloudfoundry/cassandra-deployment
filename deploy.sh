@@ -16,6 +16,8 @@ bosh -d "${deployment_name}" \
     -o operations/scale-memory.yml \
         -v max_heap_size=2G \
         -v heap_newsize=400M \
-    -o operations/shield-v7-agent.yml \
+    -o operations/shield-v8-agent.yml \
+        -v shield_domain=shield-v8.dbsp.dw \
+    -o operations/shield-v8-devwatt.yml \
     -o operations/shield-v7-purge-archives.yml \
     -o operations/latest-versions.yml

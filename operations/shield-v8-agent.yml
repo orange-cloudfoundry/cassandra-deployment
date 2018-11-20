@@ -4,7 +4,9 @@
   type: replace
   value:
     name: shield
-    version: latest
+    version: "8.0.16"
+    url:     https://github.com/starkandwayne/shield-boshrelease/releases/download/v8.0.16/shield-8.0.16.tgz
+    sha1:    8a0ececa11e995834824bb3c8cba1c5301b09a03
 
 - path: /instance_groups/name=cassandra-seeds/jobs/-
   type: replace
@@ -24,37 +26,73 @@
         ca: ((shield-ca.certificate))
       env:
         path:
-          - /var/vcap/cassandra/job/bin
-      targets:
-        system-keyspace:
-          name: (deployment)/(name)-(index)/system-keyspace
-          plugin: cassandra
-          config:
-            cassandra_host: (ip)
-            cassandra_password: ((cassandra_admin_password))
-            cassandra_keyspace: system
-            cassandra_bindir: /var/vcap/jobs/cassandra/bin
-            cassandra_datadir: /var/vcap/store/cassandra/((deployment_name))/data
-      jobs:
-        example-sys-ks_hourly2fs:
-          name: (deployment)/(name)-(index)/system/hourly2fs
-          schedule: hourly
-          target: (deployment)/(name)-(index)/system-keyspace
-          store: test-fs-store
-          retention: week
-      stores:
-        name: test-fs-store
-        plugin: fs
-        config:
-          base_dir: /var/vcap/store/shield-backups
-      schedules:
-        hourly: hourly at 30
-      retention-policies:
-        week: 7d
+          - /var/vcap/jobs/cassandra/bin
+
+- path: /instance_groups/name=cassandra-seeds/jobs/-
+  type: replace
+  value: &shield_import_job
+    name: import
+    release: shield
+    properties:
+      import:
+        tenants:
+          - name: cassandra-tenant
+            systems:
+              - name: (deployment)/(name)-(index)/user-keyspaces
+                agent: (ip):5444
+                plugin: cassandra
+                config:
+                  host: (ip)
+                  password: ((cassandra_admin_password))
+                  datadir: /var/vcap/store/cassandra/((deployment_name))/data
+                summary: "Save user keyspaces and roles"  
+                jobs:
+                  - name: (deployment)/(name)-(index)/user-keyspaces/hourly2fs
+                    when: hourly at 30
+                    policy: week
+                    storage: cassandra-scality-backups
+                    paused: false
+
+      # targets:
+      #   system-keyspace:
+      #     name: (deployment)/(name)-(index)/user-keyspaces
+      #     plugin: cassandra
+      #     config:
+      #       host: (ip)
+      #       password: ((cassandra_admin_password))
+      #       datadir: /var/vcap/store/cassandra/((deployment_name))/data
+      # jobs:
+      #   example-usr-ks_hourly2fs:
+      #     name: (deployment)/(name)-(index)/user-keyspaces/hourly2fs
+      #     schedule: hourly
+      #     target: (deployment)/(name)-(index)/user-keyspaces
+      #     store: test-fs-store
+      #     retention: week
+      # stores:
+      #   test-fs-store:
+      #     # WARNING: this 'fs' store below is a test-ONLY storage for SHIELD.
+      #     # Indeed, SHIELD v7 stores the backup archives locally on each node,
+      #     # but tries to purge the archives on the SHIELD server itself.
+      #     #
+      #     # This means that no purge can occur, whatever the retention is
+      #     # used. Thus you'll finally fill your Cassandra persistent storage.
+      #     # This is why you MUST NOT go to production with this.
+      #     name: test-fs-store
+      #     plugin: fs
+      #     config:
+      #       base_dir: /var/vcap/store/shield-backups
+      # schedules:
+      #   hourly-30: hourly at 30
+      # retention-policies:
+      #   week: 7d
 
 - path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent?
   type: replace
   value: *shield_agent_job
+
+- path: /instance_groups/name=cassandra-servers/jobs/name=import?
+  type: replace
+  value: *shield_import_job
 
 - path: /variables/-
   type: replace

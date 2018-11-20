@@ -1,0 +1,13 @@
+---
+
+- path: /instance_groups/name=cassandra-seeds/jobs/name=shield-agent/properties/core/ca
+  type: replace
+  value: ((/bosh-jra/shield-v8/shield-ca.certificate))
+
+- path: /instance_groups/name=cassandra-seeds/jobs/name=shield-agent/consumes/shield/deployment
+  type: replace
+  value: shield-v8
+
+- path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent/consumes/shield/deployment
+  type: replace
+  value: shield-v8
