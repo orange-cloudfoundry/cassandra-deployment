@@ -16,7 +16,7 @@
     consumes:
       shield: { from: shield, deployment: shield }
     properties:
-      name: cassandra
+      name: (name)-(index)
       shield-url: https://((shield_domain))
       require-shield-core: false
       core:
@@ -28,71 +28,17 @@
         path:
           - /var/vcap/jobs/cassandra/bin
 
-- path: /instance_groups/name=cassandra-seeds/jobs/-
-  type: replace
-  value: &shield_import_job
-    name: import
-    release: shield
-    properties:
-      import:
-        tenants:
-          - name: cassandra-tenant
-            systems:
-              - name: (deployment)/(name)-(index)/user-keyspaces
-                agent: (ip):5444
-                plugin: cassandra
-                config:
-                  host: (ip)
-                  password: ((cassandra_admin_password))
-                  datadir: /var/vcap/store/cassandra/((deployment_name))/data
-                summary: "Save user keyspaces and roles"  
-                jobs:
-                  - name: (deployment)/(name)-(index)/user-keyspaces/hourly2fs
-                    when: hourly at 30
-                    policy: week
-                    storage: cassandra-scality-backups
-                    paused: false
-
-      # targets:
-      #   system-keyspace:
-      #     name: (deployment)/(name)-(index)/user-keyspaces
-      #     plugin: cassandra
-      #     config:
-      #       host: (ip)
-      #       password: ((cassandra_admin_password))
-      #       datadir: /var/vcap/store/cassandra/((deployment_name))/data
-      # jobs:
-      #   example-usr-ks_hourly2fs:
-      #     name: (deployment)/(name)-(index)/user-keyspaces/hourly2fs
-      #     schedule: hourly
-      #     target: (deployment)/(name)-(index)/user-keyspaces
-      #     store: test-fs-store
-      #     retention: week
-      # stores:
-      #   test-fs-store:
-      #     # WARNING: this 'fs' store below is a test-ONLY storage for SHIELD.
-      #     # Indeed, SHIELD v7 stores the backup archives locally on each node,
-      #     # but tries to purge the archives on the SHIELD server itself.
-      #     #
-      #     # This means that no purge can occur, whatever the retention is
-      #     # used. Thus you'll finally fill your Cassandra persistent storage.
-      #     # This is why you MUST NOT go to production with this.
-      #     name: test-fs-store
-      #     plugin: fs
-      #     config:
-      #       base_dir: /var/vcap/store/shield-backups
-      # schedules:
-      #   hourly-30: hourly at 30
-      # retention-policies:
-      #   week: 7d
-
-- path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent?
+- path: /instance_groups/name=cassandra-servers/jobs/-
   type: replace
   value: *shield_agent_job
 
-- path: /instance_groups/name=cassandra-servers/jobs/name=import?
-  type: replace
-  value: *shield_import_job
+#- path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent?
+#  type: replace
+#  value: *shield_agent_job
+
+#- path: /instance_groups/name=cassandra-servers/jobs/name=import?
+#  type: replace
+#  value: *shield_import_job
 
 - path: /variables/-
   type: replace

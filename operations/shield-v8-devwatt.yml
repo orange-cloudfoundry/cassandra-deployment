@@ -8,6 +8,66 @@
   type: replace
   value: shield-v8
 
+- path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent/properties/core/ca
+  type: replace
+  value: ((/bosh-jra/shield-v8/shield-ca.certificate))
+
 - path: /instance_groups/name=cassandra-servers/jobs/name=shield-agent/consumes/shield/deployment
   type: replace
   value: shield-v8
+
+# add import job on cassandra-seeds instance groups
+- path: /instance_groups/name=cassandra-seeds/jobs/-
+  type: replace
+  value: &config_shield
+    name: import
+    release: shield
+    properties:
+#     generate_token: true
+#     core: sandbox
+      core: ((shield-url))
+#     domain: shield-webui-((deployment_name)).((/secrets/cloudfoundry_ops_domain))
+      domain: ((shield_domain))
+      import:
+        ca: ((/bosh-jra/shield-v8/shield-ca.certificate))
+        core: ((shield-url))
+        insecure_skip_verify: true
+        token: ((shield-token))
+        tenants:
+        - name: ((shield-tenant))
+          systems:
+          - name: ((deployment_name))-(ip)
+#            agent: (name)-(index)-(ip):5444
+            agent: (ip):5444
+            plugin: cassandra
+            config:
+              host: (ip)
+              user: cassandra
+              password: ((cassandra_admin_password))
+              bindir: "/var/vcap/jobs/cassandra/bin"
+              datadir: "/var/vcap/store/cassandra/((deployment_name))/data"
+            jobs:
+            - name: (name)-(index)-(ip)-backup-test
+              paused: true
+              policy: ((shield-retention))
+              storage: ((shield-storage))
+              when: every 8 hours from 0:15
+            plugin: cassandra
+            summary: shield v8
+          storage:
+          - name:  ((shield-storage))
+            summary: "Internal S3 cloud storage for all SHIELD tenants to use"
+            agent:  ((shield-server)):5444
+            plugin: s3
+            config:
+              s3_host: ((s3-host))
+              s3_port: ((shield-port))
+              access_key_id: ((s3-access-key))
+              secret_access_key: ((s3-access-key))
+              bucket: ((s3-bucket)) #pre-requisite
+              skip_ssl_validation: true
+
+
+- path: /instance_groups/name=cassandra-servers/jobs/-
+  type: replace
+  value: *config_shield

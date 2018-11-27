@@ -1,3 +1,18 @@
 ---
-deployment_name: cassandra
-network_name: default
+##deployment_name: cassandra
+deployment_name: your_deployment_name
+network_name: you_network_name
+plugin-shield-storage: "amazon S3"
+shield-agent: your_shield_agent_name
+#shield-server: your_shield_server_name if dns ok
+shield-server: iyour_ip_shield_server if no dns
+s3-host: name_or_ip-of_your_S3_storage
+shield-port: your_shield_number_port
+s3-access-key: your_S3_access_key
+s3-secret-key: your_S3_secret_key
+s3-bucket: name_of_your_bucket
+shield-tenant: name_of_your_tenant
+shield-storage: name_of_your_storage_backups
+shield-url: https://your_shield_url_server
+shield-token: your_shield_client_token // use to log on shield server ie replace name and password
+shield-retention: your_policy_retention_name
