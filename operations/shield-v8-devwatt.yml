@@ -63,9 +63,10 @@
               s3_host: ((s3-host))
               s3_port: ((shield-port))
               access_key_id: ((s3-access-key))
-              secret_access_key: ((s3-access-key))
+              secret_access_key: ((s3-secret-key))
               bucket: ((s3-bucket)) #pre-requisite
-              skip_ssl_validation: true
+              signature_version: ((aws-signature))
+              skip_ssl_validation: ((skip-ssl-validation))
 
 
 - path: /instance_groups/name=cassandra-servers/jobs/-

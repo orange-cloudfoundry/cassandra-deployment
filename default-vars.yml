@@ -16,3 +16,5 @@ shield-storage: name_of_your_storage_backups
 shield-url: https://your_shield_url_server
 shield-token: your_shield_client_token // use to log on shield server ie replace name and password
 shield-retention: your_policy_retention_name
+aws-signature: your_number_corresponding_aws_signature_version // 2 or 4 
+skip-ssl-validation: true or false
